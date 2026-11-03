@@ -4,3 +4,4 @@ node_modules/
 .env.*
 snapshot.json
 .DS_Store
+.env*
