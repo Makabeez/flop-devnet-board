@@ -1,0 +1,11 @@
+{
+  "name": "flop-devnet-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Live FLOP devnet miner board: registered vs calibrated vs paid, and who the gateway actually routes to",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": { "snapshot": "node scripts/snapshot.mjs" },
+  "dependencies": { "@polkadot/api": "17.0.2" }
+}
