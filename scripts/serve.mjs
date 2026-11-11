@@ -38,7 +38,7 @@ async function refresh() {
     console.log(`${new Date().toISOString()} snapshot ok in ${Date.now() - t0} ms, ${snap.miners.length} miners, ${snap.channelsAllTime.total} channels`);
   } catch (e) {
     failures += 1;
-    lastError = String(e?.message || e).slice(0, 300);
+    lastError = String(e?.message || e?.error?.message || (e?.type && `websocket ${e.type}`) || e).slice(0, 300);
     console.error(`${new Date().toISOString()} snapshot failed (${failures}): ${lastError}`);
     // Drop the connection on a timeout or repeated failures; the next round opens a fresh one.
     if (api && (failures >= 2 || /timed out/.test(lastError))) {

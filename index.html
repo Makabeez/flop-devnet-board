@@ -297,9 +297,12 @@ footer{color:var(--dim);font-size:12.5px;text-align:center;margin-top:24px}
     $('gen').textContent = 'snapshot ' + new Date(d.generatedAt).toLocaleString();
   }
 
+  // Fetched straight from the snapshot server: Vercel's proxy egress gets bot-challenged by Cloudflare.
+  const SNAPSHOT_URL = 'https://flopboard-api.baserep.xyz/snapshot';
+
   async function load() {
     try {
-      const r = await fetch('/api/snapshot', { cache: 'no-store' });
+      const r = await fetch(SNAPSHOT_URL, { cache: 'no-store' });
       const d = await r.json();
       if (!r.ok) throw new Error(d.message || ('HTTP ' + r.status));
       $('err').hidden = true;

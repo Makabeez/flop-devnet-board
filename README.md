@@ -34,7 +34,7 @@ scripts/serve.mjs     snapshot server: one persistent chain connection, rebuilds
 scripts/snapshot.mjs  run one snapshot locally
 ```
 
-The JSON is public and CORS-open at `/api/snapshot`, so anyone can build on it.
+The JSON is public and CORS-open at `https://flopboard-api.baserep.xyz/snapshot` (also `/api/snapshot` on the board), so anyone can build on it.
 
 ## Run locally
 
