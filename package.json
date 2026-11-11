@@ -6,6 +6,6 @@
   "type": "module",
   "license": "MIT",
   "engines": { "node": ">=20" },
-  "scripts": { "snapshot": "node scripts/snapshot.mjs" },
+  "scripts": { "snapshot": "node scripts/snapshot.mjs", "serve": "node scripts/serve.mjs" },
   "dependencies": { "@polkadot/api": "17.0.2" }
 }

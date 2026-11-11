@@ -2,7 +2,7 @@
 
 A live board of the FLOP devnet miner economy: how many miners the stake sponsor funded, how many are registered and calibrated, which ones the hosted gateway actually routes inference to, and who got paid.
 
-Everything is read from public sources, once a minute:
+Everything is read from public sources, every 5 minutes:
 
 | Data | Source |
 |---|---|
@@ -27,10 +27,11 @@ The chain's genesis is checked on every read (`0x99c172c0…d631`), so the board
 ## Layout
 
 ```
-index.html          the board (static, no build step, refreshes every 60 s)
-api/snapshot.js     Vercel function: returns one JSON snapshot, CDN-cached 60 s
-lib/snapshot.js     all the reading and aggregation
-scripts/snapshot.mjs  run the same snapshot locally
+index.html            the board (static, no build step, refreshes every 5 min)
+vercel.json           rewrites /api/snapshot to the snapshot server
+lib/snapshot.js       all the reading and aggregation
+scripts/serve.mjs     snapshot server: one persistent chain connection, rebuilds every 5 min
+scripts/snapshot.mjs  run one snapshot locally
 ```
 
 The JSON is public and CORS-open at `/api/snapshot`, so anyone can build on it.
@@ -42,11 +43,20 @@ npm install
 npm run snapshot > snapshot.json
 ```
 
-Node 20 or newer. One snapshot takes 10 to 20 s (it reads every compute channel and pages through the indexer).
+Node 20 or newer. One snapshot takes about 70 s as of 11 Nov 2026 (it reads every compute channel, about 29k, and pages through the indexer).
 
 ## Deploy
 
-Import the repo in Vercel (framework preset: Other, no build command). `api/snapshot.js` becomes a serverless function with a 60 s limit; `index.html` is served as the page.
+The page is static on Vercel; the snapshot is built by a small long-running server instead of a Vercel function. A snapshot decodes every compute channel on the chain, so its cost grows with network activity, and rebuilding it inside a serverless function on every cache miss burned through the Fluid CPU quota.
+
+1. Run the server on any always-on box (Node 20+):
+   ```bash
+   npm install
+   PORT=8098 REFRESH_MS=300000 npm run serve
+   ```
+   It serves `/snapshot` (JSON, CORS open) and `/health`, bound to 127.0.0.1 by default (`HOST` to change).
+2. Expose it over HTTPS (a Cloudflare tunnel works) and point the rewrite in `vercel.json` at that URL.
+3. Import the repo in Vercel (framework preset: Other, no build command). `/api/snapshot` keeps working for anyone building on it.
 
 Optional environment overrides: `FLOP_RPC`, `FLOP_MCP_URL`, `FLOP_FAUCET_URL`, `FLOP_GATEWAY_URL`.
 

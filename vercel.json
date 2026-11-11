@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/snapshot", "destination": "https://flopboard-api.baserep.xyz/snapshot" }
+  ]
+}
