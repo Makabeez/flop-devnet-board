@@ -3,6 +3,7 @@
 // /api/snapshot here, so the board costs no Vercel function CPU.
 //   PORT=8098 REFRESH_MS=300000 node scripts/serve.mjs
 import http from 'node:http';
+import '../lib/ws-shim.js';
 import { connect, buildSnapshot } from '../lib/snapshot.js';
 
 const PORT = Number(process.env.PORT || 8098);
